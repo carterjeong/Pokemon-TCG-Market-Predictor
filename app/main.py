@@ -14,7 +14,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app import __version__
-from app.api.routes import health
+from app.api.routes import cards, health
 from app.core.config import get_settings
 from app.db.session import engine
 
@@ -45,7 +45,7 @@ def create_app() -> FastAPI:
 
     # --- Routers ---
     app.include_router(health.router)
-    # Future (Carter):    app.include_router(cards.router,   prefix=settings.api_v1_prefix)
+    app.include_router(cards.router, prefix=settings.api_v1_prefix)
     # Future (Carter):    app.include_router(predict.router, prefix=settings.api_v1_prefix)
     # Future (Security):  app.include_router(auth.router,    prefix=settings.api_v1_prefix)
 

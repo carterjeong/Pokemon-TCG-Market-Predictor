@@ -1,13 +1,15 @@
-"""Pydantic V2 read schemas for API responses.
+"""Pydantic V2 schemas for the Cards API.
 
-Owner: Carter (SWE). `from_attributes=True` lets these validate directly
-from ORM instances.
+Owner: Carter (SWE) — feature/api-routes.
+
+`from_attributes=True` lets response models validate directly from
+SQLAlchemy ORM instances, so route handlers stay thin.
 """
 
 import datetime
 from decimal import Decimal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class _ORMModel(BaseModel):
@@ -25,18 +27,9 @@ class SetRead(_ORMModel):
     logo_url: str | None = None
 
 
-class PricePointRead(_ORMModel):
-    source: str
-    variant: str
-    currency: str
-    price_low: Decimal | None = None
-    price_mid: Decimal | None = None
-    price_high: Decimal | None = None
-    price_market: Decimal | None = None
-    snapshot_date: datetime.date
+class CardResponse(_ORMModel):
+    """Single card, mapped 1:1 from ``app.db.models.Card`` columns."""
 
-
-class CardRead(_ORMModel):
     id: str
     set_id: str
     name: str
@@ -47,7 +40,26 @@ class CardRead(_ORMModel):
     artist: str | None = None
     image_small_url: str | None = None
     image_large_url: str | None = None
+    tcgplayer_url: str | None = None
 
 
-class CardWithPrices(CardRead):
-    price_history: list[PricePointRead] = []
+class PriceHistoryResponse(_ORMModel):
+    """One time-series snapshot row; ordered ASC for chart rendering."""
+
+    snapshot_date: datetime.date
+    source: str
+    variant: str
+    currency: str
+    price_low: Decimal | None = None
+    price_mid: Decimal | None = None
+    price_high: Decimal | None = None
+    price_market: Decimal | None = None
+
+
+class PaginatedCardResponse(BaseModel):
+    """Pagination envelope for card listings."""
+
+    items: list[CardResponse]
+    total: int = Field(ge=0, description="Total rows matching the filters")
+    page: int = Field(ge=1)
+    size: int = Field(ge=1, le=100)
