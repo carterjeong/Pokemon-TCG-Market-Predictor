@@ -1,0 +1,21 @@
+# ============================================================
+# Pokemon TCG Market Predictor — Backend Dependencies
+# Owner: Carter (SWE) — versions verified against PyPI 2026-08-18
+# ============================================================
+
+# --- Web framework ---
+fastapi==0.141.1
+uvicorn[standard]==0.46.0
+
+# --- Database (async) ---
+sqlalchemy==2.0.52
+asyncpg==0.31.0
+greenlet==3.4.0            # required by SQLAlchemy asyncio extension
+alembic==1.18.5            # schema migrations
+
+# --- Validation & settings (Pydantic V2) ---
+pydantic==2.13.3
+pydantic-settings==2.14.0
+
+# --- HTTP client (pokemontcg.io ingestion) ---
+httpx==0.28.1

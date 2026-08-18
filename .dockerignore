@@ -1,0 +1,21 @@
+# Keep the build context minimal — smaller image, no secret leakage
+.git
+.github
+.venv
+venv
+__pycache__
+*.py[cod]
+.env
+.env.*
+*.pem
+*.key
+secrets/
+.pytest_cache
+.mypy_cache
+.ruff_cache
+data/
+models/
+*.md
+docker-compose*.yml
+.dockerignore
+.gitignore
